@@ -1,27 +1,23 @@
-from flask import Flask
+from flask import (Flask, request)
 from .auth import Auth
-from .dashboard import Dashboard
+#from .dashboard import Dashboard
+
+
 
 app = Flask(__name__)
-
 auth = Auth()
-dashB = Dashboard()
+#dashB = Dashboard()
 
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+	return auth.register(request.method)
 
-@app.route('/')
-def showHome():
-	home.showHome()
-
-@app.route('/register')
-def showRegister():
-	auth.showRegister()
-
-@app.route('/login')
-def showLogin():
-	auth.showLogin()
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+	return auth.login(request.method)
 	
 @app.route('/dashboard')
-def showDashboard():
-	dashB.showDashboard
+def dashboard():
+	pass
 
 
