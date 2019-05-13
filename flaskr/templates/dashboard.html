@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <section>
+        {% for file in files %}
+            <div>
+                <img src="{{ file['fileName'] }}" alt="" title="{{ file['uploaded'] }}"/>
+                <figcaption>{{ file['fileName'] }}</figcaption>
+            </div>
+        {% endfor %}
+    </section>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="img">
+        <input type="submit" value="Upload"/>
+    </form>
+
+</body>
+</html>
