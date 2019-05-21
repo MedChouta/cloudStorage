@@ -1,4 +1,4 @@
-from flask import (Flask, request, g, make_response)
+from flask import (Flask, request, g, make_response, redirect, url_for)
 from .auth import Auth
 from .dashboard import Dashboard
 
@@ -18,11 +18,16 @@ def login():
 	
 @app.route('/dashboard', methods=('GET', 'POST'))
 def dashboard():
-	if request.method == 'GET':
-		return dashB.showFiles()
-	else:
-		return dashB.addFile(request.method)
+		return dashB.showFiles(request.method)
 
-@app.route('/check')
-def check():
-	return request.cookies.get('user')
+@app.route('/delete/<int:post_id>')
+def delete(post_id):
+	return dashB.delete(post_id)
+
+"""
+@app.before_request
+def before_request():
+	if request.cookies.get('user') is None:
+		return redirect(url_for('login'))
+	elif (request.cookies.get('user') is not None) and request.endpoint != 'dashboard':
+		return redirect(url_for('dashboard'))"""
