@@ -6,7 +6,7 @@ from werkzeug import secure_filename
 class Dashboard(Database):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DATABASE = os.path.join(BASE_DIR, "database.db")
-    UPLOAD_FOLDER = "C:\\Users\\mohammed\\project\\flaskr\\static\\uploads"
+    UPLOAD_FOLDER = "C:\\Users\\mo.chouta\\Desktop\\project\\flaskr\\static\\uploads"
 
     def showFiles(self, method):
         if request.cookies.get('user') is not None:
@@ -28,16 +28,16 @@ class Dashboard(Database):
                 return render_template("dashboard.html", files=files, uploads=self.UPLOAD_FOLDER, count=count[0], username=user[1])
             
             else:
-                print(request.form['order'])
-                if (request.form['order'] is not None) and (request.form['extensions'] is not None):
-                    if request.form['order'] != "None":
-                        files = self.order()
-                        return render_template("dashboard.html", files=files, uploads=self.UPLOAD_FOLDER, count=count[0], username=user[1])
-                    
-                    elif request.form['extensions'] != "None":
-                        files = self.order()
-                        return render_template("dashboard.html", files=files, uploads=self.UPLOAD_FOLDER, count=count[0], username=user[1])
-                
+                if 'extensions' in request.form:
+                    print("[MC]OUTPUT")
+                    files = self.filter()
+                    return render_template("dashboard.html", files=files, uploads=self.UPLOAD_FOLDER, count=count[0], username=user[1])
+                elif 'order' in request.form:
+                    files = self.order()
+                    return render_template("dashboard.html", files=files, uploads=self.UPLOAD_FOLDER, count=count[0], username=user[1])
+                elif 'search' in request.form:
+                    files = self.search()
+                    return render_template("dashboard.html", files=files, uploads=self.UPLOAD_FOLDER, count=count[0], username=user[1])
                 else:
                     return self.addFile(method)
 
@@ -50,6 +50,11 @@ class Dashboard(Database):
             fileName = secure_filename(f.filename)
             f.save(os.path.join(self.UPLOAD_FOLDER, fileName))
             
+            extension = fileName.split('.')
+            extension = extension[len(extension)-1]
+            
+            print(extension)
+
             conn  = self.connect(self.DATABASE)
             db = conn.cursor()
 
@@ -58,14 +63,14 @@ class Dashboard(Database):
             if uniqFile is not None:
                 db.execute("DELETE FROM storedFile WHERE fileName=?", (fileName,))
             
-            db.execute("INSERT INTO storedFile (fileName, author_id) Values(?, ?)", (f.filename,request.cookies.get('user')))
+            db.execute("INSERT INTO storedFile (fileName, author_id, extension) Values(?, ?, ?)", (f.filename, request.cookies.get('user'), extension))
             
             conn.commit()
         
             return redirect(url_for('dashboard'))
 
         else:
-            redirect(url_for("dashboard"))
+            return redirect(url_for("dashboard"))
 
     def countFiles(self):
         conn = self.connect(self.DATABASE)
@@ -115,12 +120,8 @@ class Dashboard(Database):
         conn  = self.connect(self.DATABASE)
         db = conn.cursor()
         order = request.form['order']
-        ext = request.form['extensions']
-
-        if (ext == "None" and order == "None") or (ext != "None" and order != "None"):
-            return redirect(url_for('dashboard'))
-
-        elif order == "ASC" or order == "DESC":
+        
+        if order == "ASC" or order == "DESC":
             files = db.execute(
                 "SELECT F.id, F.author_id, F.fileName, F.uploaded FROM storedFile AS F" 
                 " INNER JOIN user AS U ON F.author_id=U.id ORDER BY F.uploaded " + order
@@ -138,19 +139,25 @@ class Dashboard(Database):
     def filter(self):
         conn  = self.connect(self.DATABASE)
         db = conn.cursor()
-        order = request.form['order']
         ext = request.form['extensions']
+        
+        files = db.execute(
+                "SELECT id, author_id, fileName, uploaded FROM storedFile WHERE author_id=? AND (extension=? OR extension=upper(?))", (request.cookies.get('user'), ext, ext)
+                ).fetchall()
+        print(files)
 
-
-        if (ext == "None" and order == "None") or (ext != "None" and order != "None"):
-            return redirect(url_for('dashboard'))
-
-        else:
-            files = db.execute(
-                "SELECT F.id, F.author_id, F.fileName, F.uploaded FROM storedFile AS F" 
-                " INNER JOIN user AS U ON F.author_id=U.id LIKE %."+ ext
-            ).fetchall()
 
         conn.commit()
+
+        return files
+
+    def search(self):
+        conn = self.connect(self.DATABASE)
+        db = conn.cursor()
+        query = request.form['search']
+
+        files = db.execute(
+            "SELECT id, author_id, fileName, uploaded FROM storedFile WHERE fileName LIKE ?", (query+'%',)
+        ).fetchall()
 
         return files

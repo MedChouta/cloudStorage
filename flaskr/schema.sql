@@ -15,6 +15,7 @@ CREATE TABLE storedFile(
     author_id INTEGER NOT NULL,
 	filePath TEXT,
     fileName TEXT NOT NULL,
+    extension TEXT NOT NULL,
     uploaded TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES user (id)
 );

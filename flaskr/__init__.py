@@ -24,6 +24,10 @@ def dashboard():
 def delete(post_id):
 	return dashB.delete(post_id)
 
+@app.route('/logout')
+def logout():
+	return auth.logout()
+
 """
 @app.before_request
 def before_request():

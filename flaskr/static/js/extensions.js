@@ -24,8 +24,12 @@ for(let i = 0; i < fileElt.length; i++){
 
 /***************************/
 
-document.getElementById("upload").onchange = () => {
-    document.getElementById("form").submit()
+var forms = document.getElementsByClassName('form')
+var inputs = document.getElementsByClassName('input')
+
+for(let i = 0; i < forms.length; i++)
+    inputs[i].onchange = () => {
+    forms[i].submit()
 }
 
 

@@ -70,5 +70,6 @@ class Auth(Database):
 		return render_template("register.html")
 
 	def logout(self):
-		session.clear()
-		return redirect(url_for(home))
+		resp = make_response(redirect(url_for('login')))
+		resp.set_cookie('user', '', expires=0)
+		return resp
