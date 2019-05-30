@@ -50,11 +50,11 @@ let text1 = `
 File Encryption made easy with Crypto</br>
 A file encryption utility using the secure AES-128 algorithm</br>
 Available for: </br>
-
-<img class="p-2" src="https://img.icons8.com/ios-glyphs/60/000000/linux.png" alt="Linux">
-<img class="p-2" src="https://img.icons8.com/ios/50/000000/windows8-filled.png" alt="Windows">
-<img class="p-2" src="https://img.icons8.com/ios-glyphs/50/000000/mac-client.png" alt="Mac">
-
+<div class="flex">
+    <img class="p-2" src="https://img.icons8.com/ios-glyphs/60/000000/linux.png" alt="Linux">
+    <img class="p-2" src="https://img.icons8.com/ios/50/000000/windows8-filled.png" alt="Windows">
+    <img class="p-2" src="https://img.icons8.com/ios-glyphs/50/000000/mac-client.png" alt="Mac">
+</div>
 `
 
 let section = new Section("Keep your files secret", text1, {src: "/static/img/screenshot.png", alt: "Utility screenshot"})

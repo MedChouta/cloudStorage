@@ -4,9 +4,7 @@ from flask import (request, render_template, flash, redirect, url_for, session, 
 from werkzeug import secure_filename
 
 class Dashboard(Database):
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATABASE = os.path.join(BASE_DIR, "database.db")
-    UPLOAD_FOLDER = "C:\\Users\\mo.chouta\\Desktop\\project\\flaskr\\static\\uploads"
+    UPLOAD_FOLDER = "C:\\Users\\mohammed\\project\\flaskr\\static\\uploads"
 
     def showFiles(self, method):
         if request.cookies.get('user') is not None:
@@ -42,7 +40,7 @@ class Dashboard(Database):
                     return self.addFile(method)
 
         else:
-            return redirect(url_for('login'))
+            return redirect(url_for('root'))
 
     def addFile(self, method):
         if method == 'POST':

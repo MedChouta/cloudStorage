@@ -4,40 +4,15 @@
     <title>Dashboard</title>
     <meta charset="utf-8"/>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet" />
 </head>
 <body>
-
-    <style>
-        .upload{
-            position: fixed;
-            bottom: 0;
-            right: 0;
-        }
-        aside{
-            min-width: 150px;
-            padding-bottom: 100%;
-        }
-        section {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-gap: 10px;
-            grid-auto-rows: minmax(300px, auto);
-        }
-        .file:hover{
-            background-color: rgb(220,220,220);
-        }
-        .fileSection{
-            overflow-y: auto;
-            width: 100%;
-        }
-    </style>
-    
     <div class="flex  h-full fixed">
         <aside class="self-start flex flex-col items-center border">
             <img src="{{ url_for('static', filename='img/icons/user.png') }}" alt="user"/>
-            <figcaption>{{ username }}</figcaption>
-            <a href="">settings</a>
-            <a href="{{ url_for('logout')}}">logout</a>
+            <a href="{{ url_for('dashboard') }}">{{ username }}</a>
+            <a href="{{ url_for('settings') }}">settings</a>
+            <a href="{{ url_for('logout') }}">logout</a>
         </aside>
 
         <div class="fileSection">
@@ -68,7 +43,7 @@
                         <form class="pl-4" method="POST">
                             <p>
                                 <input type="text" name="search" class="border rounded-lg p-2"/>
-                                <input type="submit" value="Rechercher" class="border rounded p-1"/>
+                                <input type="submit" value="Search" class="border rounded p-1"/>
                             </p>
                         </form>
 

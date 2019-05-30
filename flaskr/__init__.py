@@ -1,24 +1,36 @@
-from flask import (Flask, request, g, make_response, redirect, url_for)
+from flask import (Flask, request, g, make_response, redirect, url_for, render_template)
 from .auth import Auth
 from .dashboard import Dashboard
+from .settings import Settings
 
 app = Flask(__name__)
 app.secret_key = "dev"
 
 auth = Auth()
 dashB = Dashboard()
+sett = Settings()
 
-@app.route('/register', methods=('GET', 'POST'))
-def register():
-	return auth.register(request.method)
-
-@app.route('/login', methods=('GET', 'POST'))
-def login():
-	return auth.login(request.method)
+@app.route('/', methods=('GET', 'POST'))
+def root():
+	if 'user' not in request.cookies:
+		if request.method == "POST":
+			if "register" in request.form:
+				return auth.register(request.method)
+			elif "login" in request.form:
+				return auth.login(request.method)
+		else:
+			return render_template("register.html")
+	else:
+		return redirect(url_for('dashboard'))
+ 
 	
 @app.route('/dashboard', methods=('GET', 'POST'))
 def dashboard():
-		return dashB.showFiles(request.method)
+	return dashB.showFiles(request.method)
+
+@app.route('/dashboard/settings', methods=('GET', 'POST'))
+def settings():
+	return sett.settings(request.method)
 
 @app.route('/delete/<int:post_id>')
 def delete(post_id):
@@ -27,11 +39,3 @@ def delete(post_id):
 @app.route('/logout')
 def logout():
 	return auth.logout()
-
-"""
-@app.before_request
-def before_request():
-	if request.cookies.get('user') is None:
-		return redirect(url_for('login'))
-	elif (request.cookies.get('user') is not None) and request.endpoint != 'dashboard':
-		return redirect(url_for('dashboard'))"""

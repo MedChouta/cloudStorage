@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <meta charset="utf-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/dashboard.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <div class="flex h-full fixed">
+        <aside class="self-start flex flex-col items-center border">
+            <img src="{{ url_for('static', filename='img/icons/user.png') }}" alt="user"/>
+            <a href="{{ url_for('dashboard') }}">{{ userData[0] }}</a>
+            <a href="">settings</a>
+            <a href="{{ url_for('logout') }}">logout</a>
+        </aside>
+
+        <div class="settings p-4">
+            <h1>Settings</h1>
+            <section class="items-center">
+                <form method="POST">
+                    <p class="m-2">
+                        <label for="firstName">First Name: </label>
+                        <input class="border rounded p-1" id="firstName" type="text" name="firstName" placeholder="Your first name" value="{{ userData[0] }}">
+                    </p>
+
+                    <p class="m-2">
+                        <label for="lastName">Last Name: </label>
+                        <input class="border rounded p-1" type="text" id="lastName" name="lastName" placeholder="Your last name" value="{{ userData[1] }}">
+                    </p>
+
+                    <p class="m-2">
+                        <label for="email">Email: </label>
+                        <input class="border rounded p-1" type="email" id="email" name="email" placeholder="Your email" value="{{ userData[2] }}">
+                    </p>
+
+                    <p class="m-2">
+                        <label for="password">Password</label>
+                        <input class="border rounded p-1" type="password" id="password" name="password" placeholder="Your password">
+                    </p>
+
+                    <input type="submit" value="Update" class="border rounded p-1 float-right">
+                </form>
+            </section></br>
+        </div>
+
+    </div>
+
+</body>
+</html>

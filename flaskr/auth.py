@@ -9,10 +9,6 @@ class Auth(Database):
 
 	def register(self, method):
 		if method == "POST":
-			resp = make_response("test")
-			resp.set_cookie('user', 'bonsoir')
-
-
 			conn = self.connect(self.DATABASE)
 			db = conn.cursor()
 
@@ -33,12 +29,14 @@ class Auth(Database):
 					'INSERT INTO user (first_name, last_name, email, password) Values(?, ?, ?, ?)',
 					(firstName, lastName, email, generate_password_hash(password))
 				)
+				
 				conn.commit()
-				return redirect(url_for('login'))
+				
+				return redirect(url_for('root'))
 			
 			flash(error)
 
-		return render_template("register.html")
+			return redirect(url_for('root'))
 
 	def login(self, method):
 		if method == "POST" :
@@ -57,6 +55,7 @@ class Auth(Database):
 				error = "Incorrect email"
 			elif not check_password_hash(user[4], password):
 				error = "Incorrect password"
+				print(error)
 
 			if error is None:
 				expire_date = datetime.datetime.now()
@@ -67,9 +66,9 @@ class Auth(Database):
 
 			flash(error)
 
-		return render_template("register.html")
+		return redirect(url_for('root'))
 
 	def logout(self):
-		resp = make_response(redirect(url_for('login')))
+		resp = make_response(redirect(url_for('root')))
 		resp.set_cookie('user', '', expires=0)
 		return resp

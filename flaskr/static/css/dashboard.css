@@ -1,0 +1,27 @@
+h1{
+    font-size: 1.80em;
+    font-weight: bold;
+}
+
+.upload{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+aside{
+    min-width: 150px;
+    padding-bottom: 100%;
+}
+section {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(200px, auto);
+}
+.file:hover{
+    background-color: rgb(220,220,220);
+}
+.fileSection, .settings{
+    overflow-y: auto;
+    width: 100%;
+}
